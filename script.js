@@ -1,4 +1,4 @@
-// script.js - Versión Final Optimizada para Google Sheets
+// script.js - Versión Final Optimizada y Probada
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxGAbY49fhlFrt7rYapGo70NRLAVLP4rMfmm7XwDobQURipf3VGBs7Kb1ZRVhFOI5Dg7w/exec';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -25,14 +25,18 @@ function setupAcompanantesInput() {
     const totalPersonasInput = document.getElementById('total_personas');
     if (!totalPersonasInput) return;
 
-    const acompanantesContainer = document.createElement('div');
-    acompanantesContainer.id = 'acompanantes-container';
-    acompanantesContainer.className = 'form-group';
+    // Crear el contenedor si no existe
+    let acompanantesContainer = document.getElementById('acompanantes-container');
+    if (!acompanantesContainer) {
+        acompanantesContainer = document.createElement('div');
+        acompanantesContainer.id = 'acompanantes-container';
+        acompanantesContainer.className = 'form-group';
+        totalPersonasInput.closest('.form-group').appendChild(acompanantesContainer);
+    }
     
-    // Insertar después del grupo de total_personas
-    totalPersonasInput.parentNode.parentNode.appendChild(acompanantesContainer);
-    
+    // Escuchar cambios tanto por teclado como por botones +/-
     totalPersonasInput.addEventListener('change', updateAcompanantesInputs);
+    totalPersonasInput.addEventListener('input', updateAcompanantesInputs);
     updateAcompanantesInputs();
 }
 
@@ -45,6 +49,7 @@ function updateAcompanantesInputs() {
     if (totalPersonas > 1) {
         const label = document.createElement('label');
         label.className = 'form-label';
+        label.style.marginTop = '15px';
         label.innerHTML = `<i class="fas fa-users"></i> Nombres de tus ${totalPersonas - 1} acompañante(s):`;
         container.appendChild(label);
         
@@ -69,19 +74,16 @@ async function handleFormSubmit(e) {
     
     const form = e.target;
     const btn = document.getElementById('submit-btn');
-    const statusMsg = document.getElementById('status-message');
     const originalText = btn.innerHTML;
     
     if (!validateForm()) return;
     
     // UI: Estado de carga
     btn.disabled = true;
-    btn.classList.add('loading');
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando información...';
     
     try {
         const formData = new FormData(form);
-        const totalPersonas = parseInt(formData.get('total_personas')) || 1;
         
         // Recolectar nombres de acompañantes
         const acompanantesArr = [];
@@ -89,46 +91,49 @@ async function handleFormSubmit(e) {
             if (input.value.trim()) acompanantesArr.push(input.value.trim());
         });
         
-        const dataToSend = {
-            fecha_registro: new Date().toLocaleString('es-CL'),
-            nombre_completo: formData.get('nombre').trim(),
-            email: formData.get('email')?.trim() || 'No provisto',
-            telefono: formData.get('telefono')?.trim() || 'No provisto',
-            relacion_familia: formData.get('relacion'),
-            plan_participacion: formData.get('plan'),
-            hora_llegada: formData.get('hora'),
-            total_personas: totalPersonas,
-            acompanantes: acompanantesArr.join(', ') || 'Ninguno',
-            comentarios: formData.get('comentarios')?.trim() || '',
-            estado: formData.get('plan') === 'no-asistir' ? 'No asistirá' : 'Confirmado',
-            user_agent: navigator.userAgent
-        };
+        // PREPARACIÓN DE DATOS PARA GOOGLE SHEETS
+        // Usamos URLSearchParams para asegurar compatibilidad total con el script de Google
+        const params = new URLSearchParams();
+        params.append('fecha_registro', new Date().toLocaleString('es-CL'));
+        params.append('nombre_completo', formData.get('nombre').trim());
+        params.append('email', formData.get('email')?.trim() || 'No provisto');
+        params.append('telefono', formData.get('telefono')?.trim() || 'No provisto');
+        params.append('relacion_familia', formData.get('relacion'));
+        params.append('plan_participacion', formData.get('plan'));
+        params.append('hora_llegada', formData.get('hora'));
+        params.append('total_personas', formData.get('total_personas'));
+        params.append('acompanantes', acompanantesArr.join(', ') || 'Ninguno');
+        params.append('comentarios', formData.get('comentarios')?.trim() || '');
+        params.append('estado', formData.get('plan') === 'no-asistir' ? 'No asistirá' : 'Confirmado');
 
-        // Envio a Google Sheets
+        // ENVÍO (Eliminado no-cors para evitar peticiones vacías)
         await fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
-            mode: 'no-cors',
-            cache: 'no-cache',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(dataToSend)
+            mode: 'cors', 
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: params.toString()
         });
 
-        // Como no-cors no permite leer la respuesta, asumimos éxito si no hay error de red
+        // Éxito
         showStatus('success', '¡Tu confirmación ha sido enviada con éxito!');
-        
         const mockId = Math.random().toString(36).substr(2, 6).toUpperCase();
-        showConfirmationModal({ ...dataToSend, id: mockId });
+        showConfirmationModal({
+            nombre_completo: formData.get('nombre'),
+            total_personas: formData.get('total_personas'),
+            id: mockId
+        });
         
         form.reset();
         updateAcompanantesInputs();
         
     } catch (err) {
         console.error('Error de envío:', err);
-        showStatus('error', 'Hubo un error al conectar con el servidor.');
+        showStatus('error', 'Hubo un error al enviar. Por favor, usa WhatsApp.');
         showWhatsAppAlternative();
     } finally {
         btn.disabled = false;
-        btn.classList.remove('loading');
         btn.innerHTML = originalText;
     }
 }
@@ -137,7 +142,14 @@ function validateForm() {
     const requiredFields = ['nombre', 'relacion', 'plan', 'hora', 'total_personas'];
     for (const id of requiredFields) {
         const el = document.getElementById(id);
-        if (!el || !el.value.trim()) {
+        // Validar radios por nombre si no se encuentra por ID
+        if (id === 'plan' || id === 'hora') {
+            const radioChecked = document.querySelector(`input[name="${id}"]:checked`);
+            if (!radioChecked) {
+                showStatus('warning', 'Por favor, selecciona una opción obligatoria.');
+                return false;
+            }
+        } else if (!el || !el.value.trim()) {
             showStatus('warning', 'Por favor, completa todos los campos obligatorios.');
             if(el) el.focus();
             return false;
@@ -154,9 +166,11 @@ function showStatus(type, message) {
     statusMsg.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i> <span>${message}</span>`;
     statusMsg.style.display = 'flex';
     
+    statusMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
     setTimeout(() => {
         statusMsg.style.display = 'none';
-    }, 6000);
+    }, 8000);
 }
 
 function showConfirmationModal(data) {
@@ -210,12 +224,12 @@ function showWhatsAppAlternative() {
     container.innerHTML = `
         <div style="background: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 8px; margin-top: 20px; text-align: center;">
             <p style="color: #856404; font-size: 0.9rem; margin-bottom: 10px;">
-                <i class="fas fa-info-circle"></i> Si el formulario no carga, pulsa aquí:
+                <i class="fas fa-info-circle"></i> Si el formulario presenta problemas, pulsa aquí:
             </p>
             <a href="https://wa.me/56938654827?text=Hola! Quiero confirmar mi asistencia para Año Nuevo." 
                target="_blank" 
                style="background: #25D366; color: white; padding: 8px 15px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 0.9rem; display: inline-block;">
-               <i class="fab fa-whatsapp"></i> WhatsApp Damián
+               <i class="fab fa-whatsapp"></i> WhatsApp Directo
             </a>
         </div>
     `;
