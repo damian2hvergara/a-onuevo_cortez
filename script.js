@@ -3,23 +3,10 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('confirmation-form');
-    if(form) form.addEventListener('submit', handleFormSubmit);
-    testConnection();
-});
-
-async function testConnection() {
-    const { error } = await supabaseClient.from('invitados_familia_cortez').select('id').limit(1);
-    if (error) console.error('❌ Error de conexión:', error.message);
-    else console.log('✅ Conexión establecida correctamente');
-}
-
 async function handleFormSubmit(e) {
     e.preventDefault();
     const btn = document.getElementById('submit-btn');
     btn.disabled = true;
-    btn.innerHTML = 'Guardando...';
 
     try {
         const formData = new FormData(e.target);
@@ -28,7 +15,8 @@ async function handleFormSubmit(e) {
             if (input.value.trim()) acompañantes.push({ nombre: input.value.trim() });
         });
 
-        const { error } = await supabaseClient.from('invitados_familia_cortez').insert([{
+        // Este objeto debe ser IGUAL a las columnas de tu tabla
+        const dataToInsert = {
             nombre_completo: formData.get('nombre'),
             relacion_familia: formData.get('relacion'),
             plan_participacion: formData.get('plan'),
@@ -38,18 +26,24 @@ async function handleFormSubmit(e) {
             total_personas: acompañantes.length + 1,
             user_agent: navigator.userAgent,
             fecha_registro: new Date().toISOString()
-        }]);
+        };
+
+        const { error } = await supabaseClient.from('invitados_familia_cortez').insert([dataToInsert]);
 
         if (error) throw error;
-        
-        alert('¡Confirmación enviada con éxito!');
-        e.target.reset();
-        location.reload(); 
+
+        // Mostrar éxito
+        document.getElementById('confirmation-modal').classList.add('active');
+        document.querySelector('.confirmation-content').innerHTML = `
+            <i class="fas fa-check-circle" style="font-size:4rem; color:#10b981;"></i>
+            <h2>¡Confirmado!</h2>
+            <p>Gracias por confirmar tu asistencia.</p>
+            <button onclick="location.reload()" class="btn-submit">Cerrar</button>
+        `;
     } catch (err) {
-        console.error('Error detallado:', err);
-        alert('Error al guardar. Asegúrate de ejecutar el código SQL en Supabase.');
+        console.error('Error final:', err);
+        alert('Error: ' + err.message);
     } finally {
         btn.disabled = false;
-        btn.innerHTML = 'Confirmar Asistencia';
     }
 }
