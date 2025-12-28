@@ -3,7 +3,7 @@
 // ==========================================
 const SUPABASE_URL = 'https://hzmhobnwqqwamdtzspbv.supabase.co';
 // USA LA CLAVE QUE EMPIEZA CON eyJ...
-const SUPABASE_ANON_KEY = 'TU_CLAVE_ANON_AQUÍ'; 
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh6bWhvYm53cXF3YW1kdHpzcGJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4NzQwMzEsImV4cCI6MjA4MjQ1MDAzMX0.JGb8TpU6tbFfSBi2Gs34YzciYGgQu5gUvWtdnHm6F2I'; 
 
 // Cambiamos el nombre de la variable a 'supabaseClient' para evitar el error "Identifier already declared"
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
