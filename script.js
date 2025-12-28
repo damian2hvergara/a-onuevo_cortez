@@ -1,5 +1,5 @@
-// script.js - Versión Final Optimizada
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxGAbY49fhlFrt7rYapGo70NRLAVLP4rMfmm7XwDobQURipf3VGBs7Kb1ZRVhFOI5Dg7w/exec';
+// script.js - Versión Final Corregida para Familia Cortez
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzjLrr1he1cBXijPwCMrVyefGy91IZA3p_d5H7-CxURuhPdUuHBJ9gM1VcSgzyK1aGYDA/exec';
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 Sistema RSVP Familia Cortez iniciado');
@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         form.addEventListener('submit', handleFormSubmit);
     }
     
+    // Lógica de scroll suave
     const scrollInd = document.querySelector('.scroll-indicator');
     if(scrollInd) {
         scrollInd.addEventListener('click', () => {
@@ -29,6 +30,7 @@ function setupAcompanantesInput() {
         acompanantesContainer = document.createElement('div');
         acompanantesContainer.id = 'acompanantes-container';
         acompanantesContainer.className = 'form-group';
+        // Insertar después del grupo de total_personas
         totalPersonasInput.closest('.form-group').appendChild(acompanantesContainer);
     }
     
@@ -83,7 +85,7 @@ async function handleFormSubmit(e) {
             if (input.value.trim()) acompanantesArr.push(input.value.trim());
         });
 
-        // PREPARACIÓN DE DATOS JSON (Compatible con el paso de Google Sheets)
+        // Objeto con los datos exactamente como los espera el script de Google
         const dataToSend = {
             fecha_registro: new Date().toLocaleString('es-CL'),
             nombre_completo: formData.get('nombre'),
@@ -97,16 +99,16 @@ async function handleFormSubmit(e) {
             comentarios: formData.get('comentarios') || ''
         };
 
-        // Petición POST mejorada para evitar bloqueos
+        // Petición POST silenciosa (no-cors)
         await fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
-            mode: 'no-cors', // Modo opaco para evitar errores de CORS
+            mode: 'no-cors', 
             cache: 'no-cache',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(dataToSend)
         });
 
-        // Simulación de éxito (con no-cors no podemos leer la respuesta pero los datos llegan)
+        // Mostramos éxito (aunque sea no-cors, si llega aquí es porque se envió)
         showStatus('success', '¡Tu confirmación ha sido enviada!');
         const mockId = Math.random().toString(36).substr(2, 6).toUpperCase();
         showConfirmationModal({ 
@@ -134,8 +136,13 @@ function validateForm() {
         const el = document.getElementById(id);
         if (id === 'plan' || id === 'hora') {
             const radioChecked = document.querySelector(`input[name="${id}"]:checked`);
-            if (!radioChecked) { return false; }
+            if (!radioChecked) {
+                showStatus('warning', 'Por favor, completa los campos obligatorios.');
+                return false;
+            }
         } else if (!el || !el.value.trim()) {
+            showStatus('warning', 'Por favor, completa los campos obligatorios.');
+            if(el) el.focus();
             return false;
         }
     }
@@ -145,34 +152,47 @@ function validateForm() {
 function showStatus(type, message) {
     const statusMsg = document.getElementById('status-message');
     if (!statusMsg) return;
+    
     statusMsg.className = `status-message ${type}`;
     statusMsg.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i> <span>${message}</span>`;
     statusMsg.style.display = 'flex';
-    setTimeout(() => { statusMsg.style.display = 'none'; }, 8000);
+    
+    setTimeout(() => {
+        statusMsg.style.display = 'none';
+    }, 8000);
 }
 
 function showConfirmationModal(data) {
     const modal = document.getElementById('confirmation-modal');
     if (!modal) return;
+    
     const modalContent = modal.querySelector('.confirmation-content');
     const confirmationId = `CORTEZ-${data.id}`;
     
     modalContent.innerHTML = `
         <div style="text-align: center;">
-            <h2>¡Confirmación Recibida!</h2>
-            <p><strong>Invitado:</strong> ${data.nombre_completo}</p>
-            <p><strong>Código RSVP:</strong> ${confirmationId}</p>
-            <button onclick="shareConfirmation('${confirmationId}', '${data.nombre_completo}')" style="background:#25D366; color:white; padding:10px; border-radius:20px; width:100%; border:none; margin-top:10px; cursor:pointer;">
-                <i class="fab fa-whatsapp"></i> Compartir
+            <h2 style="font-family: 'Playfair Display', serif; color: #0a1a3a;">¡Confirmación Recibida!</h2>
+            <p>Gracias por registrarte.</p>
+            <div style="background: #f8fafc; padding: 15px; border-radius: 10px; text-align: left; margin: 15px 0; border: 1px solid #e2e8f0;">
+                <p><strong>Invitado:</strong> ${data.nombre_completo}</p>
+                <p><strong>Asistentes:</strong> ${data.total_personas}</p>
+                <p><strong>Código:</strong> ${confirmationId}</p>
+            </div>
+            <button onclick="shareConfirmation('${confirmationId}', '${data.nombre_completo}')" 
+                    style="background: #25D366; color: white; border: none; padding: 12px; border-radius: 25px; cursor: pointer; width: 100%; font-weight: bold; margin-bottom: 10px;">
+                <i class="fab fa-whatsapp"></i> Compartir Comprobante
             </button>
-            <button onclick="closeConfirmationModal()" style="background:none; border:none; color:gray; margin-top:10px; cursor:pointer;">Cerrar</button>
+            <button onclick="closeConfirmationModal()" style="background: transparent; border: 1px solid #ccc; padding: 8px; border-radius: 20px; cursor: pointer; color: #666;">Cerrar</button>
         </div>
     `;
+    
     modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
 }
 
 function closeConfirmationModal() {
-    document.getElementById('confirmation-modal').classList.remove('active');
+    const modal = document.getElementById('confirmation-modal');
+    if (modal) modal.classList.remove('active');
     document.body.style.overflow = 'auto';
 }
 
@@ -188,5 +208,6 @@ function shareConfirmation(id, nombre) {
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
 }
 
+// Globales
 window.closeConfirmationModal = closeConfirmationModal;
 window.shareConfirmation = shareConfirmation;
