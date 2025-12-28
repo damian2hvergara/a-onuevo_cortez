@@ -97,136 +97,105 @@
         </div>
     </section>
 
-    <!-- Sección Formulario -->
-    <section class="form-section" id="formulario">
-        <div class="container">
-            <div class="form-container">
-                <div class="section-header">
-                    <h2 class="section-title">Confirma tu lugar</h2>
-                    <p class="section-subtitle">Ayúdanos a prepararte un espacio perfecto para recibir juntos el 2026</p>
-                </div>
-                
-                <div id="status-message" class="status-message">
-                    <!-- Mensajes dinámicos se insertarán aquí -->
-                </div>
-                
-                <form id="confirmation-form">
-                    <div class="form-group">
-                        <label class="form-label required" for="nombre">¿Cuál es tu nombre?</label>
-                        <input type="text" id="nombre" class="form-input" required placeholder="Tu nombre completo">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="email">Correo electrónico</label>
-                        <input type="email" id="email" class="form-input" placeholder="ejemplo@email.com (opcional)">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="telefono">Teléfono</label>
-                        <input type="tel" id="telefono" class="form-input" placeholder="+569 1234 5678 (opcional)">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label required" for="relacion">¿Cómo te relacionas con la familia Cortez?</label>
-                        <select id="relacion" class="form-select" required>
-                            <option value="">Selecciona una opción</option>
-                            <option value="familia directa">Familia directa</option>
-                            <option value="amigo">Amigo/a de la familia</option>
-                            <option value="conocido">Conocido</option>
-                            <option value="otro">Otro</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label required">Tu plan para la noche:</label>
-                        <div class="radio-group">
-                            <div class="radio-option">
-                                <input type="radio" id="plan-todo" name="plan" value="cena-fiesta" class="radio-input" required>
-                                <label for="plan-todo" class="radio-label">
-                                    <div class="radio-icon"><i class="fas fa-utensils"></i></div>
-                                    <div><strong>¡Me sumo a todo!</strong><br>Cena + Fiesta</div>
-                                </label>
-                            </div>
-                            
-                            <div class="radio-option">
-                                <input type="radio" id="plan-fiesta" name="plan" value="solo-fiesta" class="radio-input" required>
-                                <label for="plan-fiesta" class="radio-label">
-                                    <div class="radio-icon"><i class="fas fa-glass-cheers"></i></div>
-                                    <div><strong>Solo Fiesta</strong><br>Después de 23:00 hrs</div>
-                                </label>
-                            </div>
-                            
-                            <div class="radio-option">
-                                <input type="radio" id="plan-no" name="plan" value="no-asistir" class="radio-input" required>
-                                <label for="plan-no" class="radio-label">
-                                    <div class="radio-icon"><i class="fas fa-heart"></i></div>
-                                    <div><strong>Esta vez no podré</strong><br>Los extrañaré</div>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label required">¿A qué hora planeas llegar?</label>
-                        <div class="time-selector">
-                            <div class="time-option">
-                                <input type="radio" id="hora-20" name="hora" value="20:00 - 21:00" class="time-input" required>
-                                <label for="hora-20" class="time-label">20:00 - 21:00</label>
-                            </div>
-                            <div class="time-option">
-                                <input type="radio" id="hora-21" name="hora" value="21:00 - 22:00" class="time-input" required>
-                                <label for="hora-21" class="time-label">21:00 - 22:00</label>
-                            </div>
-                            <div class="time-option">
-                                <input type="radio" id="hora-22" name="hora" value="22:00 - 23:00" class="time-input" required>
-                                <label for="hora-22" class="time-label">22:00 - 23:00</label>
-                            </div>
-                            <div class="time-option">
-                                <input type="radio" id="hora-brindis" name="hora" value="Para el brindis" class="time-input" required>
-                                <label for="hora-brindis" class="time-label">¡Para el brindis!</label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label required" for="total_personas">¿Vendrás con más personas?</label>
-                        <div class="personas-counter">
-                            <input type="number" id="total_personas" class="form-input personas-input" min="1" max="20" value="1" required>
-                            <div style="font-size: 1rem; color: var(--azul-marino); font-weight: 500;">
-                                persona(s) mayor(es) de 15 años
-                            </div>
-                        </div>
-                        <div class="personas-info-box">
-                            <div class="personas-note">
-                                <p><i class="fas fa-info-circle"></i> <strong>Incluyéndote a ti.</strong> Este número representa el total de personas mayores de 15 años que asistirán.</p>
-                                <p><i class="fas fa-child"></i> Los menores de 15 años no necesitan registro y no cuentan en este número.</p>
-                                <p><i class="fas fa-users"></i> Si vienes solo, deja el número en 1.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="comentarios">Para que tu experiencia sea perfecta:</label>
-                        <textarea id="comentarios" class="form-textarea" rows="4" placeholder="¿Alguna alergia alimentaria, preferencia o comentario que debamos saber? (Opcional)"></textarea>
-                    </div>
-                    
-                    <div class="form-note">
-                        <i class="fas fa-info-circle"></i> Los valores se comunicarán de forma personalizada al cierre de confirmaciones. ¡Gracias por ser parte de nuestra tradición!<br><br>
-                        <strong>Contactos de confirmación:</strong><br>
-                        - Damián Vergara Cortez: +56 9 3865 4827<br>
-                        - Fernanda Araís Cortez: +56 9 3037 3866
-                    </div>
-                    
-                    <button type="submit" class="btn-submit" id="submit-btn">
-                        <i class="fas fa-paper-plane"></i> Confirmar Asistencia
-                    </button>
-                </form>
-                
-                <!-- WhatsApp Alternative (se muestra dinámicamente) -->
-                <div id="whatsapp-alternative-container"></div>
+<!-- Sección Formulario - VERSIÓN SIMPLIFICADA -->
+<section class="form-section" id="formulario">
+    <div class="container">
+        <div class="form-container">
+            <div class="section-header">
+                <h2 class="section-title">Confirma tu lugar</h2>
+                <p class="section-subtitle">Ayúdanos a prepararte un espacio perfecto</p>
             </div>
+            
+            <div id="status-message" class="status-message" style="display: none;"></div>
+            
+            <form id="confirmation-form">
+                <!-- Campos del formulario (igual que antes) -->
+                <div class="form-group">
+                    <label class="form-label required" for="nombre">Nombre completo *</label>
+                    <input type="text" id="nombre" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="email">Email (opcional)</label>
+                    <input type="email" id="email" class="form-input">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="telefono">Teléfono (opcional)</label>
+                    <input type="tel" id="telefono" class="form-input">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label required" for="relacion">Relación con la familia *</label>
+                    <select id="relacion" class="form-select" required>
+                        <option value="">Selecciona</option>
+                        <option value="familia directa">Familia directa</option>
+                        <option value="amigo">Amigo/a</option>
+                        <option value="conocido">Conocido</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label required">Tu plan *</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="plan-todo" name="plan" value="cena-fiesta" required>
+                            <label for="plan-todo" class="radio-label">
+                                <div class="radio-icon"><i class="fas fa-utensils"></i></div>
+                                <div>Cena + Fiesta</div>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="plan-fiesta" name="plan" value="solo-fiesta" required>
+                            <label for="plan-fiesta" class="radio-label">
+                                <div class="radio-icon"><i class="fas fa-glass-cheers"></i></div>
+                                <div>Solo Fiesta</div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label required">Hora de llegada *</label>
+                    <div class="time-selector">
+                        <div class="time-option">
+                            <input type="radio" id="hora-20" name="hora" value="20:00 - 21:00" required>
+                            <label for="hora-20" class="time-label">20:00 - 21:00</label>
+                        </div>
+                        <div class="time-option">
+                            <input type="radio" id="hora-21" name="hora" value="21:00 - 22:00" required>
+                            <label for="hora-21" class="time-label">21:00 - 22:00</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label required" for="total_personas">Total de personas *</label>
+                    <input type="number" id="total_personas" class="form-input" min="1" max="20" value="1" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="comentarios">Comentarios (opcional)</label>
+                    <textarea id="comentarios" class="form-textarea" rows="3"></textarea>
+                </div>
+                
+                <button type="submit" class="btn-submit" id="submit-btn">
+                    <i class="fas fa-paper-plane"></i> Confirmar Asistencia
+                </button>
+            </form>
+            
+            <!-- Botón de alternativa WhatsApp -->
+            <div style="text-align: center; margin-top: 20px;">
+                <button id="whatsapp-alternative-btn" style="background: none; border: none; color: #25D366; cursor: pointer;">
+                    <i class="fab fa-whatsapp"></i> ¿Problemas? Confirma por WhatsApp
+                </button>
+            </div>
+            
+            <!-- Contenedor para alternativa WhatsApp -->
+            <div id="whatsapp-alternative-container"></div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Modal de Confirmación Mejorado -->
     <div class="confirmation-modal" id="confirmation-modal">
