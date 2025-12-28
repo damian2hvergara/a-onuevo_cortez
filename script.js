@@ -9,10 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
         form.addEventListener('submit', handleFormSubmit);
     }
     
+    // Lógica de scroll suave
     const scrollInd = document.querySelector('.scroll-indicator');
     if(scrollInd) {
         scrollInd.addEventListener('click', () => {
-            document.querySelector('#formulario').scrollIntoView({ behavior: 'smooth' });
+            const formSection = document.querySelector('#formulario');
+            if(formSection) formSection.scrollIntoView({ behavior: 'smooth' });
         });
     }
     
@@ -21,11 +23,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function setupAcompanantesInput() {
     const totalPersonasInput = document.getElementById('total_personas');
+    if (!totalPersonasInput) return;
+
     const acompanantesContainer = document.createElement('div');
     acompanantesContainer.id = 'acompanantes-container';
     acompanantesContainer.className = 'form-group';
     
+    // Insertar después del grupo de total_personas
     totalPersonasInput.parentNode.parentNode.appendChild(acompanantesContainer);
+    
     totalPersonasInput.addEventListener('change', updateAcompanantesInputs);
     updateAcompanantesInputs();
 }
@@ -33,21 +39,26 @@ function setupAcompanantesInput() {
 function updateAcompanantesInputs() {
     const container = document.getElementById('acompanantes-container');
     const totalPersonas = parseInt(document.getElementById('total_personas').value) || 1;
+    
     container.innerHTML = '';
     
     if (totalPersonas > 1) {
         const label = document.createElement('label');
         label.className = 'form-label';
-        label.innerHTML = `Nombres de tus ${totalPersonas - 1} acompañantes:`;
+        label.innerHTML = `<i class="fas fa-users"></i> Nombres de tus ${totalPersonas - 1} acompañante(s):`;
         container.appendChild(label);
         
         for (let i = 1; i < totalPersonas; i++) {
             const inputGroup = document.createElement('div');
-            inputGroup.style.marginBottom = '10px';
+            inputGroup.className = 'input-wrapper';
+            inputGroup.style.marginBottom = '12px';
             inputGroup.innerHTML = `
-                <input type="text" class="form-input acompanante-input" 
-                       placeholder="Nombre completo de la persona ${i}" required
-                       style="width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid #ddd;">`;
+                <input type="text" 
+                       class="form-input acompanante-input" 
+                       placeholder="Nombre completo del acompañante ${i}" 
+                       required
+                       style="width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid #ddd;">
+            `;
             container.appendChild(inputGroup);
         }
     }
@@ -63,50 +74,47 @@ async function handleFormSubmit(e) {
     
     if (!validateForm()) return;
     
-    // UI: Iniciando envío
+    // UI: Estado de carga
     btn.disabled = true;
     btn.classList.add('loading');
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando en lista...';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando información...';
     
     try {
         const formData = new FormData(form);
         const totalPersonas = parseInt(formData.get('total_personas')) || 1;
-        const acompanantes = [];
         
-        document.querySelectorAll('.acompanante-input').forEach((input, index) => {
-            if (input.value.trim()) {
-                acompanantes.push({ nombre: input.value.trim() });
-            }
+        // Recolectar nombres de acompañantes
+        const acompanantesArr = [];
+        document.querySelectorAll('.acompanante-input').forEach(input => {
+            if (input.value.trim()) acompanantesArr.push(input.value.trim());
         });
         
         const dataToSend = {
+            fecha_registro: new Date().toLocaleString('es-CL'),
             nombre_completo: formData.get('nombre').trim(),
             email: formData.get('email')?.trim() || 'No provisto',
             telefono: formData.get('telefono')?.trim() || 'No provisto',
             relacion_familia: formData.get('relacion'),
             plan_participacion: formData.get('plan'),
             hora_llegada: formData.get('hora'),
-            comentarios: formData.get('comentarios')?.trim() || '',
             total_personas: totalPersonas,
-            acompanantes: acompanantes.length > 0 ? acompanantes.map(a => a.nombre).join(', ') : 'Ninguno',
-            user_agent: navigator.userAgent,
-            fecha_registro: new Date().toLocaleString('es-CL'),
-            estado: formData.get('plan') === 'no-asistir' ? 'No asistirá' : 'Confirmado'
+            acompanantes: acompanantesArr.join(', ') || 'Ninguno',
+            comentarios: formData.get('comentarios')?.trim() || '',
+            estado: formData.get('plan') === 'no-asistir' ? 'No asistirá' : 'Confirmado',
+            user_agent: navigator.userAgent
         };
 
-        // Enviar a Google Sheets usando fetch
-        // Se usa keepalive para asegurar que la petición se complete
+        // Envio a Google Sheets
         await fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
             mode: 'no-cors',
             cache: 'no-cache',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(dataToSend),
-            keepalive: true 
+            body: JSON.stringify(dataToSend)
         });
 
-        // Simulación de éxito inmediato (debido a no-cors)
-        showStatus('success', '¡Información guardada correctamente!');
+        // Como no-cors no permite leer la respuesta, asumimos éxito si no hay error de red
+        showStatus('success', '¡Tu confirmación ha sido enviada con éxito!');
         
         const mockId = Math.random().toString(36).substr(2, 6).toUpperCase();
         showConfirmationModal({ ...dataToSend, id: mockId });
@@ -115,21 +123,23 @@ async function handleFormSubmit(e) {
         updateAcompanantesInputs();
         
     } catch (err) {
-        console.error('Error:', err);
-        showStatus('error', 'Hubo un problema al conectar. Intenta de nuevo o usa WhatsApp.');
+        console.error('Error de envío:', err);
+        showStatus('error', 'Hubo un error al conectar con el servidor.');
         showWhatsAppAlternative();
+    } finally {
         btn.disabled = false;
+        btn.classList.remove('loading');
         btn.innerHTML = originalText;
     }
 }
 
 function validateForm() {
-    const required = ['nombre', 'relacion', 'plan', 'hora', 'total_personas'];
-    for (const id of required) {
+    const requiredFields = ['nombre', 'relacion', 'plan', 'hora', 'total_personas'];
+    for (const id of requiredFields) {
         const el = document.getElementById(id);
-        if (!el.value || el.value.trim() === "") {
-            showStatus('warning', `Por favor completa todos los campos obligatorios.`);
-            el.focus();
+        if (!el || !el.value.trim()) {
+            showStatus('warning', 'Por favor, completa todos los campos obligatorios.');
+            if(el) el.focus();
             return false;
         }
     }
@@ -143,19 +153,10 @@ function showStatus(type, message) {
     statusMsg.className = `status-message ${type}`;
     statusMsg.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i> <span>${message}</span>`;
     statusMsg.style.display = 'flex';
-    statusMsg.style.padding = '15px';
-    statusMsg.style.borderRadius = '8px';
-    statusMsg.style.marginBottom = '20px';
     
-    if (type === 'success') {
-        statusMsg.style.backgroundColor = '#d4edda';
-        statusMsg.style.color = '#155724';
-    } else {
-        statusMsg.style.backgroundColor = '#f8d7da';
-        statusMsg.style.color = '#721c24';
-    }
-
-    setTimeout(() => { statusMsg.style.display = 'none'; }, 6000);
+    setTimeout(() => {
+        statusMsg.style.display = 'none';
+    }, 6000);
 }
 
 function showConfirmationModal(data) {
@@ -163,30 +164,29 @@ function showConfirmationModal(data) {
     if (!modal) return;
     
     const modalContent = modal.querySelector('.confirmation-content');
-    const cId = `CORTEZ-${data.id}`;
+    const confirmationId = `CORTEZ-${data.id}`;
     
     modalContent.innerHTML = `
         <div style="text-align: center;">
-            <div style="font-size: 50px; color: #28a745; margin-bottom: 20px;">
-                <i class="fas fa-check-double"></i>
+            <div style="font-size: 50px; color: #d4b483; margin-bottom: 15px;">
+                <i class="fas fa-envelope-open-text"></i>
             </div>
-            <h2 style="font-family: 'Playfair Display', serif; margin-bottom: 15px;">¡Confirmación Exitosa!</h2>
-            <p style="margin-bottom: 20px;">Tu respuesta ha sido registrada en nuestra lista oficial de invitados.</p>
+            <h2 style="font-family: 'Playfair Display', serif; color: #0a1a3a; margin-bottom: 10px;">¡Confirmación Recibida!</h2>
+            <p style="color: #666; margin-bottom: 20px;">Gracias por ser parte de nuestro Año Nuevo 2026.</p>
             
-            <div style="background: #f9f9f9; padding: 15px; border-radius: 10px; text-align: left; margin-bottom: 20px; border-left: 4px solid #d4af37;">
+            <div style="background: #f8fafc; padding: 15px; border-radius: 10px; text-align: left; margin-bottom: 20px; border: 1px solid #e2e8f0;">
                 <p><strong>Invitado:</strong> ${data.nombre_completo}</p>
                 <p><strong>Asistentes:</strong> ${data.total_personas}</p>
-                <p><strong>Plan:</strong> ${data.plan_participacion}</p>
-                <p><strong>Código RSVP:</strong> <span style="color: #d4af37; font-weight: bold;">${cId}</span></p>
+                <p><strong>Código RSVP:</strong> <span style="color: #d4b483; font-weight: bold;">${confirmationId}</span></p>
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 10px;">
-                <button onclick="shareConfirmation('${cId}', '${data.nombre_completo}')" 
-                        style="background: #25D366; color: white; border: none; padding: 12px; border-radius: 25px; cursor: pointer; font-weight: bold;">
+                <button onclick="shareConfirmation('${confirmationId}', '${data.nombre_completo}')" 
+                        style="background: #25D366; color: white; border: none; padding: 12px; border-radius: 25px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px;">
                     <i class="fab fa-whatsapp"></i> Enviar Comprobante
                 </button>
                 <button onclick="closeConfirmationModal()" 
-                        style="background: transparent; border: 1px solid #ccc; padding: 10px; border-radius: 25px; cursor: pointer;">
+                        style="background: transparent; border: 1px solid #ccc; padding: 10px; border-radius: 25px; cursor: pointer; color: #666;">
                     Cerrar
                 </button>
             </div>
@@ -195,35 +195,37 @@ function showConfirmationModal(data) {
     
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
-    
-    const btn = document.getElementById('submit-btn');
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Confirmar Asistencia';
-    btn.classList.remove('loading');
 }
 
 function closeConfirmationModal() {
-    document.getElementById('confirmation-modal').classList.remove('active');
+    const modal = document.getElementById('confirmation-modal');
+    if (modal) modal.classList.remove('active');
     document.body.style.overflow = 'auto';
 }
 
 function showWhatsAppAlternative() {
     const container = document.getElementById('whatsapp-alternative-container');
     if (!container) return;
+    
     container.innerHTML = `
         <div style="background: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 8px; margin-top: 20px; text-align: center;">
-            <p style="color: #856404;"><i class="fas fa-info-circle"></i> Si el formulario falla, pulsa aquí:</p>
-            <a href="https://wa.me/56938654827?text=Hola! No pude usar el formulario, quiero confirmar mi asistencia." 
-               target="_blank" style="color: #25D366; font-weight: bold; text-decoration: none;">
-               <i class="fab fa-whatsapp"></i> Confirmar por WhatsApp
+            <p style="color: #856404; font-size: 0.9rem; margin-bottom: 10px;">
+                <i class="fas fa-info-circle"></i> Si el formulario no carga, pulsa aquí:
+            </p>
+            <a href="https://wa.me/56938654827?text=Hola! Quiero confirmar mi asistencia para Año Nuevo." 
+               target="_blank" 
+               style="background: #25D366; color: white; padding: 8px 15px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 0.9rem; display: inline-block;">
+               <i class="fab fa-whatsapp"></i> WhatsApp Damián
             </a>
-        </div>`;
+        </div>
+    `;
 }
 
 function shareConfirmation(id, nombre) {
-    const msg = `✅ *Confirmación Familia Cortez 2026*\n\n¡Hola! He confirmado mi asistencia.\n\n👤 *Nombre:* ${nombre}\n📋 *Código:* ${id}\n\n¡Nos vemos pronto!`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    const text = `✅ *Confirmación Familia Cortez 2026*\n\n¡Hola! Ya registré mi asistencia.\n\n👤 *Nombre:* ${nombre}\n📋 *Código:* ${id}\n\n¡Nos vemos pronto! 🥂`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
 }
 
+// Hacer funciones accesibles desde el HTML
 window.closeConfirmationModal = closeConfirmationModal;
 window.shareConfirmation = shareConfirmation;
