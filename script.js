@@ -3,7 +3,7 @@
 // ==========================================
 const SUPABASE_URL = 'https://hzmhobnwqqwamdtzspbv.supabase.co';
 // Tu clave anon public corregida:
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh6bWhvYm53cXF3YW1kdHpzcGJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4NzQwMzEsImV4cCI6MjA4MjQ1MDAzMX0.JGb8TpU6tbFfSBi2Gs34YzciYGgQu5gUvWtdnHm6F2I'; 
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh6bWhvYm53cXF3YW1kdHpzcGJ2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2Njg3NDAzMSwiZXhwIjoyMDgyNDUwMDMxfQ.9MCF188bOJXAGYnRLYCnlVv3YaaetleZL6KadktL-3I'; 
 
 // Inicializamos con un nombre de variable único para evitar el error de "ya declarado"
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
