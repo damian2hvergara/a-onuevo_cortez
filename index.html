@@ -4,14 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, shrink-to-fit=no">
     <title>Año Nuevo 2026 - Familia Cortez</title>
+    <meta name="description" content="Confirmación de asistencia - Año Nuevo 2026 con la Familia Cortez">
+    
+    <!-- Fuentes de Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Source+Serif+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Incluir Supabase JS -->
+    
+    <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Enlazar archivos CSS externos -->
+    
+    <!-- CSS propio -->
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>">
 </head>
 <body>
     <!-- Sección Hero -->
@@ -62,6 +72,16 @@
                     <p><strong>Para quienes deseen contribuir más allá de lo básico,</strong> serán bienvenidas <strong>cooperaciones espontáneas</strong> para esos extras especiales que siempre alegran la noche.</p>
                     
                     <p><strong>Un dato importante:</strong> El monto exacto para cubrir lo fundamental lo compartiremos <strong>una vez que tengamos las confirmaciones</strong>, para que sea justo y transparente. Nuestra única meta es que, quien venga, solo tenga que pensar en pasarlo bien.</p>
+                    
+                    <p><strong>Horarios de la noche:</strong></p>
+                    <ul>
+                        <li><strong>20:00 - 22:00 hrs:</strong> Llegada de invitados y cena familiar</li>
+                        <li><strong>22:00 - 00:30 hrs:</strong> Música, baile y celebración</li>
+                        <li><strong>00:00 hrs:</strong> Brindis por el Año Nuevo 2026</li>
+                        <li><strong>00:30 en adelante:</strong> Fiesta hasta que el cuerpo aguante</li>
+                    </ul>
+                    
+                    <p><em>Nota importante: Menores de 15 años no necesitan confirmación.</em></p>
                 </div>
                 
                 <div class="letter-signature">
@@ -84,6 +104,8 @@
                     <p>La celebración será en el corazón de Putaendo, donde la Familia Cortez recibe con los brazos abiertos.</p>
                     <p><strong>Dirección:</strong> Calle Los Aranda s/n, Putaendo</p>
                     <p><strong>Coordenadas:</strong> -32.6256° S, -70.7139° W</p>
+                    <p><strong>Estacionamiento:</strong> Disponible en el patio interior</p>
+                    <p><strong>Accesibilidad:</strong> La casa cuenta con acceso para personas con movilidad reducida</p>
                 </div>
                 <div class="location-actions">
                     <a href="https://maps.app.goo.gl/ZwG6P84EeUW11DS57" target="_blank" class="location-btn-primary">
@@ -106,37 +128,53 @@
                     <p class="section-subtitle">Ayúdanos a prepararte un espacio perfecto para recibir juntos el 2026</p>
                 </div>
                 
-                <div id="status-message" class="status-message">
-                    <!-- Mensajes dinámicos se insertarán aquí -->
+                <!-- Mensaje de estado dinámico -->
+                <div id="status-message" class="status-message" style="display: none;">
+                    <!-- Los mensajes se insertarán aquí dinámicamente -->
                 </div>
                 
                 <form id="confirmation-form">
+                    <!-- Campo: Nombre completo -->
                     <div class="form-group">
                         <label class="form-label required" for="nombre">¿Cuál es tu nombre?</label>
-                        <input type="text" id="nombre" class="form-input" required placeholder="Tu nombre completo">
+                        <input type="text" id="nombre" name="nombre" class="form-input" required 
+                               placeholder="Tu nombre completo"
+                               minlength="3" maxlength="100">
+                        <div class="form-hint">Así te reconoceremos al llegar</div>
                     </div>
                     
+                    <!-- Campo: Email (opcional) -->
                     <div class="form-group">
-                        <label class="form-label" for="email">Correo electrónico</label>
-                        <input type="email" id="email" class="form-input" placeholder="ejemplo@email.com (opcional)">
+                        <label class="form-label" for="email">Correo electrónico (opcional)</label>
+                        <input type="email" id="email" name="email" class="form-input" 
+                               placeholder="ejemplo@email.com"
+                               pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}">
+                        <div class="form-hint">Para enviarte recordatorios y actualizaciones</div>
                     </div>
                     
+                    <!-- Campo: Teléfono (opcional) -->
                     <div class="form-group">
-                        <label class="form-label" for="telefono">Teléfono</label>
-                        <input type="tel" id="telefono" class="form-input" placeholder="+569 1234 5678 (opcional)">
+                        <label class="form-label" for="telefono">Teléfono (opcional)</label>
+                        <input type="tel" id="telefono" name="telefono" class="form-input" 
+                               placeholder="+569 1234 5678"
+                               pattern="[\+]?[0-9\s\-\(\)]+">
+                        <div class="form-hint">Para contactarte en caso necesario</div>
                     </div>
                     
+                    <!-- Campo: Relación con la familia -->
                     <div class="form-group">
                         <label class="form-label required" for="relacion">¿Cómo te relacionas con la familia Cortez?</label>
-                        <select id="relacion" class="form-select" required>
-                            <option value="">Selecciona una opción</option>
+                        <select id="relacion" name="relacion" class="form-select" required>
+                            <option value="" disabled selected>Selecciona una opción</option>
                             <option value="familia directa">Familia directa</option>
                             <option value="amigo">Amigo/a de la familia</option>
                             <option value="conocido">Conocido</option>
+                            <option value="pareja">Pareja de familiar</option>
                             <option value="otro">Otro</option>
                         </select>
                     </div>
                     
+                    <!-- Campo: Plan para la noche -->
                     <div class="form-group">
                         <label class="form-label required">Tu plan para la noche:</label>
                         <div class="radio-group">
@@ -144,7 +182,10 @@
                                 <input type="radio" id="plan-todo" name="plan" value="cena-fiesta" class="radio-input" required>
                                 <label for="plan-todo" class="radio-label">
                                     <div class="radio-icon"><i class="fas fa-utensils"></i></div>
-                                    <div><strong>¡Me sumo a todo!</strong><br>Cena + Fiesta</div>
+                                    <div class="radio-text">
+                                        <strong>¡Me sumo a todo!</strong>
+                                        <small>Cena + Fiesta</small>
+                                    </div>
                                 </label>
                             </div>
                             
@@ -152,7 +193,10 @@
                                 <input type="radio" id="plan-fiesta" name="plan" value="solo-fiesta" class="radio-input" required>
                                 <label for="plan-fiesta" class="radio-label">
                                     <div class="radio-icon"><i class="fas fa-glass-cheers"></i></div>
-                                    <div><strong>Solo Fiesta</strong><br>Después de 23:00 hrs</div>
+                                    <div class="radio-text">
+                                        <strong>Solo Fiesta</strong>
+                                        <small>Después de 23:00 hrs</small>
+                                    </div>
                                 </label>
                             </div>
                             
@@ -160,12 +204,16 @@
                                 <input type="radio" id="plan-no" name="plan" value="no-asistir" class="radio-input" required>
                                 <label for="plan-no" class="radio-label">
                                     <div class="radio-icon"><i class="fas fa-heart"></i></div>
-                                    <div><strong>Esta vez no podré</strong><br>Los extrañaré</div>
+                                    <div class="radio-text">
+                                        <strong>Esta vez no podré</strong>
+                                        <small>Los extrañaré</small>
+                                    </div>
                                 </label>
                             </div>
                         </div>
                     </div>
                     
+                    <!-- Campo: Hora de llegada -->
                     <div class="form-group">
                         <label class="form-label required">¿A qué hora planeas llegar?</label>
                         <div class="time-selector">
@@ -188,12 +236,23 @@
                         </div>
                     </div>
                     
+                    <!-- Campo: Total de personas -->
                     <div class="form-group">
-                        <label class="form-label required" for="total_personas">¿Vendrás con más personas?</label>
+                        <label class="form-label required" for="total_personas">¿Cuántas personas mayores de 15 años vienen?</label>
                         <div class="personas-counter">
-                            <input type="number" id="total_personas" class="form-input personas-input" min="1" max="20" value="1" required>
-                            <div style="font-size: 1rem; color: var(--azul-marino); font-weight: 500;">
-                                persona(s) mayor(es) de 15 años
+                            <div class="personas-input-group">
+                                <button type="button" class="personas-btn" onclick="adjustPersonas(-1)" aria-label="Reducir número de personas">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" id="total_personas" name="total_personas" 
+                                       class="form-input personas-input" min="1" max="20" value="1" required
+                                       aria-label="Número total de personas">
+                                <button type="button" class="personas-btn" onclick="adjustPersonas(1)" aria-label="Aumentar número de personas">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <div class="personas-text">
+                                <span id="personas-count">1</span> persona(s) mayor(es) de 15 años
                             </div>
                         </div>
                         <div class="personas-info-box">
@@ -203,33 +262,53 @@
                                 <p><i class="fas fa-users"></i> Si vienes solo, deja el número en 1.</p>
                             </div>
                         </div>
+                        <!-- Los inputs de acompañantes se generarán dinámicamente aquí -->
                     </div>
                     
+                    <!-- Campo: Comentarios -->
                     <div class="form-group">
                         <label class="form-label" for="comentarios">Para que tu experiencia sea perfecta:</label>
-                        <textarea id="comentarios" class="form-textarea" rows="4" placeholder="¿Alguna alergia alimentaria, preferencia o comentario que debamos saber? (Opcional)"></textarea>
+                        <textarea id="comentarios" name="comentarios" class="form-textarea" rows="4" 
+                                  placeholder="¿Alguna alergia alimentaria, preferencia o comentario que debamos saber? (Opcional)"
+                                  maxlength="500"></textarea>
+                        <div class="form-hint">Ejemplo: "Soy vegetariano", "Alergia a los mariscos", "Voy a llevar un postre especial"</div>
                     </div>
                     
+                    <!-- Nota importante -->
                     <div class="form-note">
-                        <i class="fas fa-info-circle"></i> Los valores se comunicarán de forma personalizada al cierre de confirmaciones. ¡Gracias por ser parte de nuestra tradición!<br><br>
-                        <strong>Contactos de confirmación:</strong><br>
-                        - Damián Vergara Cortez: +56 9 3865 4827<br>
-                        - Fernanda Araís Cortez: +56 9 3037 3866
+                        <div class="form-note-header">
+                            <i class="fas fa-info-circle"></i> Información importante
+                        </div>
+                        <div class="form-note-content">
+                            <p>Los valores se comunicarán de forma personalizada al cierre de confirmaciones. ¡Gracias por ser parte de nuestra tradición!</p>
+                            <p><strong>Contactos de confirmación directa:</strong></p>
+                            <ul>
+                                <li><i class="fab fa-whatsapp"></i> Damián Vergara Cortez: <a href="https://wa.me/56938654827" target="_blank">+56 9 3865 4827</a></li>
+                                <li><i class="fab fa-whatsapp"></i> Fernanda Araís Cortez: <a href="https://wa.me/56930373866" target="_blank">+56 9 3037 3866</a></li>
+                            </ul>
+                            <p><em>Fecha límite para confirmar: 28 de diciembre de 2025</em></p>
+                        </div>
                     </div>
                     
-                    <button type="submit" class="btn-submit" id="submit-btn">
+                    <!-- Botón de envío -->
+                    <button type="submit" class="btn-submit" id="submit-btn" aria-label="Confirmar asistencia">
                         <i class="fas fa-paper-plane"></i> Confirmar Asistencia
                     </button>
+                    
+                    <!-- Texto de protección de datos -->
+                    <div class="privacy-notice">
+                        <i class="fas fa-shield-alt"></i> Tus datos se utilizarán exclusivamente para la organización de este evento y no serán compartidos con terceros.
+                    </div>
                 </form>
                 
-                <!-- WhatsApp Alternative (se muestra dinámicamente) -->
+                <!-- Alternativa WhatsApp (se muestra dinámicamente) -->
                 <div id="whatsapp-alternative-container"></div>
             </div>
         </div>
     </section>
 
-    <!-- Modal de Confirmación Mejorado -->
-    <div class="confirmation-modal" id="confirmation-modal">
+    <!-- Modal de Confirmación -->
+    <div class="confirmation-modal" id="confirmation-modal" aria-hidden="true" aria-labelledby="modal-title" role="dialog">
         <div class="confirmation-content">
             <!-- Contenido dinámico se insertará aquí -->
         </div>
@@ -240,16 +319,321 @@
         <div class="container">
             <div class="footer-logo">CORTEZ</div>
             <p class="footer-text">Celebrando juntos desde siempre</p>
-            <p class="footer-text" style="margin-top: 20px; font-size: 0.9rem;">
-                © 2025 - Una tradición familiar<br>
-                <strong>Ubicación:</strong> Calle Los Aranda s/n, Putaendo<br>
-                <strong>Ver en Maps:</strong> <a href="https://maps.app.goo.gl/ZwG6P84EeUW11DS57" style="color: var(--oro-metalico);">https://maps.app.goo.gl/ZwG6P84EeUW11DS57</a><br>
-                <strong>Contactos:</strong> +56 9 3865 4827 / +56 9 3037 3866
-            </p>
+            
+            <div class="footer-details">
+                <div class="footer-section">
+                    <h4><i class="fas fa-map-marker-alt"></i> Ubicación</h4>
+                    <p>Calle Los Aranda s/n, Putaendo</p>
+                    <a href="https://maps.app.goo.gl/ZwG6P84EeUW11DS57" target="_blank" class="footer-link">
+                        <i class="fas fa-external-link-alt"></i> Ver en Google Maps
+                    </a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4><i class="fas fa-phone-alt"></i> Contactos</h4>
+                    <p>Damián: <a href="https://wa.me/56938654827" target="_blank">+56 9 3865 4827</a></p>
+                    <p>Fernanda: <a href="https://wa.me/56930373866" target="_blank">+56 9 3037 3866</a></p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4><i class="fas fa-calendar-alt"></i> Fecha</h4>
+                    <p>31 de diciembre de 2025</p>
+                    <p>Desde las 20:00 hrs</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2025 - Una tradición familiar de la Familia Cortez</p>
+                <p class="footer-copyright">
+                    Diseñado con <i class="fas fa-heart" style="color: var(--oro-metalico);"></i> para los nuestros
+                </p>
+            </div>
         </div>
     </footer>
 
-    <!-- Enlazar archivo JavaScript externo -->
+    <!-- JavaScript propio -->
     <script src="script.js"></script>
+    
+    <!-- Script adicional para mejoras de UX -->
+    <script>
+        // Función para ajustar el número de personas (botones + y -)
+        function adjustPersonas(change) {
+            const input = document.getElementById('total_personas');
+            let value = parseInt(input.value) + change;
+            
+            // Limitar entre 1 y 20
+            if (value < 1) value = 1;
+            if (value > 20) value = 20;
+            
+            input.value = value;
+            document.getElementById('personas-count').textContent = value;
+            
+            // Disparar evento change para actualizar inputs dinámicos
+            input.dispatchEvent(new Event('change'));
+        }
+        
+        // Inicializar contador de personas
+        document.getElementById('total_personas').addEventListener('input', function() {
+            document.getElementById('personas-count').textContent = this.value;
+        });
+        
+        // Mejorar accesibilidad del formulario
+        document.addEventListener('keydown', function(e) {
+            // Permitir navegación con teclado en los radios
+            if (e.target.classList.contains('radio-label') && (e.key === 'Enter' || e.key === ' ')) {
+                e.preventDefault();
+                e.target.previousElementSibling.checked = true;
+                e.target.previousElementSibling.dispatchEvent(new Event('change'));
+            }
+            
+            // Permitir navegación con teclado en las opciones de hora
+            if (e.target.classList.contains('time-label') && (e.key === 'Enter' || e.key === ' ')) {
+                e.preventDefault();
+                e.target.previousElementSibling.checked = true;
+                e.target.previousElementSibling.dispatchEvent(new Event('change'));
+            }
+        });
+        
+        // Prevenir envío con Enter en campos de texto individuales
+        document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]').forEach(input => {
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.target.closest('form').checkValidity()) {
+                    e.preventDefault();
+                }
+            });
+        });
+        
+        // Inicializar tooltips para iconos
+        document.addEventListener('DOMContentLoaded', function() {
+            // Agregar título a iconos informativos
+            const infoIcons = document.querySelectorAll('.fa-info-circle');
+            infoIcons.forEach(icon => {
+                if (!icon.hasAttribute('title')) {
+                    icon.setAttribute('title', 'Información importante');
+                }
+            });
+        });
+        
+        // Scroll suave para todos los enlaces internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href === '#' || href === '#!') return;
+                
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Actualizar año en el footer automáticamente
+        document.addEventListener('DOMContentLoaded', function() {
+            const yearSpan = document.querySelector('.current-year');
+            if (!yearSpan) {
+                const copyrightText = document.querySelector('.footer-bottom p');
+                if (copyrightText) {
+                    copyrightText.innerHTML = copyrightText.innerHTML.replace('2025', new Date().getFullYear());
+                }
+            }
+        });
+    </script>
+    
+    <!-- Estilos inline adicionales -->
+    <style>
+        /* Estilos para botones de incremento/decremento */
+        .personas-input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .personas-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--azul-marino);
+            color: white;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        
+        .personas-btn:hover {
+            background: var(--azul-marino-claro);
+            transform: scale(1.05);
+        }
+        
+        .personas-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .personas-text {
+            font-size: 1rem;
+            color: var(--azul-marino);
+            font-weight: 500;
+            margin-left: 10px;
+        }
+        
+        #personas-count {
+            color: var(--oro-metalico);
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+        
+        .form-hint {
+            font-size: 0.85rem;
+            color: var(--gris-medio);
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        .radio-text small {
+            display: block;
+            margin-top: 4px;
+            font-size: 0.85rem;
+            color: var(--gris-medio);
+            font-weight: normal;
+        }
+        
+        .footer-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+            text-align: left;
+        }
+        
+        .footer-section {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 12px;
+        }
+        
+        .footer-section h4 {
+            color: var(--oro-metalico);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .footer-link {
+            color: var(--oro-metalico);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+        
+        .footer-bottom {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .form-note-header {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--azul-marino);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-note-content ul {
+            margin: 10px 0 10px 20px;
+        }
+        
+        .form-note-content li {
+            margin-bottom: 8px;
+            list-style-type: none;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .form-note-content li:before {
+            content: "•";
+            color: var(--oro-metalico);
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+        
+        .privacy-notice {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--gris-medio);
+            margin-top: 15px;
+            padding: 10px;
+            border-top: 1px solid var(--plateado);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        /* Mejoras responsivas adicionales */
+        @media (max-width: 768px) {
+            .footer-details {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .personas-counter {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 15px;
+            }
+            
+            .personas-input-group {
+                justify-content: center;
+            }
+            
+            .personas-text {
+                text-align: center;
+                margin-left: 0;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .footer-section {
+                padding: 15px;
+            }
+            
+            .personas-btn {
+                width: 40px;
+                height: 40px;
+            }
+        }
+        
+        /* Animación para inputs de acompañantes */
+        .acompanante-input {
+            transition: all 0.3s ease;
+        }
+        
+        .acompanante-input:focus {
+            border-color: var(--oro-metalico);
+            box-shadow: 0 0 0 3px rgba(212, 180, 131, 0.2);
+        }
+    </style>
 </body>
 </html>
