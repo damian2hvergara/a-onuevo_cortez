@@ -2,254 +2,36 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, shrink-to-fit=no">
-    <title>Año Nuevo 2026 - Familia Cortez</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Source+Serif+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación - Familia Cortez</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Incluir Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Enlazar archivos CSS externos -->
-    <link rel="stylesheet" href="styles.css">
-</head>
+    <link rel="stylesheet" href="styles.css"> </head>
 <body>
-    <!-- Sección Hero -->
-    <section class="hero" id="hero">
-        <div class="hero-content">
-            <div class="metal-badge">Invitación Especial</div>
-            <div class="family-logo">
-                <i class="fas fa-gem"></i>
+    <form id="confirmation-form">
+        <input type="text" name="nombre" placeholder="Nombre completo" required>
+        <select name="relacion" required>
+            <option value="Familia">Familia</option>
+            <option value="Amigo">Amigo</option>
+        </select>
+        <select name="plan" required>
+            <option value="Cena y Fiesta">Cena y Fiesta</option>
+            <option value="Solo Fiesta">Solo Fiesta</option>
+        </select>
+        <input type="time" name="hora" required>
+        <textarea name="comentarios" placeholder="Comentarios"></textarea>
+        
+        <div id="acompanantes-container">
             </div>
-            <h1>Familia Cortez<br>Recibe el 2026</h1>
-            <p class="hero-subtitle">Una tradición que brilla más con cada uno de ustedes</p>
-            
-            <div class="location-highlight">
-                <h3><i class="fas fa-map-marker-alt"></i> ¿Dónde será la celebración?</h3>
-                <p><strong>📍 Calle Los Aranda s/n, Putaendo</strong></p>
-                <p>¡Nuestra casa está lista para recibirte!</p>
-                <a href="https://maps.app.goo.gl/ZwG6P84EeUW11DS57" target="_blank" class="location-btn">
-                    <i class="fas fa-map"></i> Ver en Google Maps
-                </a>
-            </div>
-            
-            <a href="#formulario" class="btn-hero">
-                <i class="fas fa-calendar-check"></i> Confirmar Participación
-            </a>
-        </div>
-        <div class="scroll-indicator">
-            <i class="fas fa-chevron-down"></i>
-        </div>
-    </section>
 
-    <!-- Sección Carta Familiar -->
-    <section class="letter-section">
-        <div class="container">
-            <div class="letter-container">
-                <div class="letter-header">
-                    <div class="family-monogram">CORTEZ</div>
-                    <h2 class="letter-title">Nuestra Invitación</h2>
-                    <div class="letter-date">31 DICIEMBRE 2025</div>
-                </div>
-                
-                <div class="letter-content">
-                    <p><strong>Queridos nuestros,</strong></p>
-                    
-                    <p>Este año, como es ya nuestra hermosa costumbre, <strong>la casa de los Cortez</strong> volverá a abrir sus puertas para recibir el Año Nuevo rodeados de las personas que más amamos: nuestra familia y nuestros amigos, que son familia elegida.</p>
-                    
-                    <p>Estamos preparando con mucho cariño una noche especial, con <strong>una cena para compartir y una fiesta para bailar</strong> hasta que el 2026 esté oficialmente entre nosotros.</p>
-                    
-                    <p><strong>Para quienes deseen contribuir más allá de lo básico,</strong> serán bienvenidas <strong>cooperaciones espontáneas</strong> para esos extras especiales que siempre alegran la noche.</p>
-                    
-                    <p><strong>Un dato importante:</strong> El monto exacto para cubrir lo fundamental lo compartiremos <strong>una vez que tengamos las confirmaciones</strong>, para que sea justo y transparente. Nuestra única meta es que, quien venga, solo tenga que pensar en pasarlo bien.</p>
-                </div>
-                
-                <div class="letter-signature">
-                    <div class="signature-name">Familia Cortez</div>
-                    <div class="signature-text">Con cariño</div>
-                </div>
-            </div>
-        </div>
-    </section>
+        <button type="submit" id="submit-btn">Confirmar Asistencia</button>
+    </form>
 
-    <!-- Sección Ubicación interactiva -->
-    <section class="location-section" id="ubicacion">
-        <div class="container">
-            <div class="location-card">
-                <div class="location-icon">
-                    <i class="fas fa-home"></i>
-                </div>
-                <h2 class="location-title">Nos vemos en nuestra casa</h2>
-                <div class="location-details">
-                    <p>La celebración será en el corazón de Putaendo, donde la Familia Cortez recibe con los brazos abiertos.</p>
-                    <p><strong>Dirección:</strong> Calle Los Aranda s/n, Putaendo</p>
-                    <p><strong>Coordenadas:</strong> -32.6256° S, -70.7139° W</p>
-                </div>
-                <div class="location-actions">
-                    <a href="https://maps.app.goo.gl/ZwG6P84EeUW11DS57" target="_blank" class="location-btn-primary">
-                        <i class="fas fa-map-marked-alt"></i> Abrir en Google Maps
-                    </a>
-                    <a href="https://waze.com/ul?ll=-32.6256,-70.7139&navigate=yes" target="_blank" class="location-btn-secondary">
-                        <i class="fab fa-waze"></i> Abrir en Waze
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Sección Formulario -->
-    <section class="form-section" id="formulario">
-        <div class="container">
-            <div class="form-container">
-                <div class="section-header">
-                    <h2 class="section-title">Confirma tu lugar</h2>
-                    <p class="section-subtitle">Ayúdanos a prepararte un espacio perfecto para recibir juntos el 2026</p>
-                </div>
-                
-                <div id="status-message" class="status-message">
-                    <!-- Mensajes dinámicos se insertarán aquí -->
-                </div>
-                
-                <form id="confirmation-form">
-                    <div class="form-group">
-                        <label class="form-label required" for="nombre">¿Cuál es tu nombre?</label>
-                        <input type="text" id="nombre" class="form-input" required placeholder="Tu nombre completo">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="email">Correo electrónico</label>
-                        <input type="email" id="email" class="form-input" placeholder="ejemplo@email.com (opcional)">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="telefono">Teléfono</label>
-                        <input type="tel" id="telefono" class="form-input" placeholder="+569 1234 5678 (opcional)">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label required" for="relacion">¿Cómo te relacionas con la familia Cortez?</label>
-                        <select id="relacion" class="form-select" required>
-                            <option value="">Selecciona una opción</option>
-                            <option value="familia directa">Familia directa</option>
-                            <option value="amigo">Amigo/a de la familia</option>
-                            <option value="conocido">Conocido</option>
-                            <option value="otro">Otro</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label required">Tu plan para la noche:</label>
-                        <div class="radio-group">
-                            <div class="radio-option">
-                                <input type="radio" id="plan-todo" name="plan" value="cena-fiesta" class="radio-input" required>
-                                <label for="plan-todo" class="radio-label">
-                                    <div class="radio-icon"><i class="fas fa-utensils"></i></div>
-                                    <div><strong>¡Me sumo a todo!</strong><br>Cena + Fiesta</div>
-                                </label>
-                            </div>
-                            
-                            <div class="radio-option">
-                                <input type="radio" id="plan-fiesta" name="plan" value="solo-fiesta" class="radio-input" required>
-                                <label for="plan-fiesta" class="radio-label">
-                                    <div class="radio-icon"><i class="fas fa-glass-cheers"></i></div>
-                                    <div><strong>Solo Fiesta</strong><br>Después de 23:00 hrs</div>
-                                </label>
-                            </div>
-                            
-                            <div class="radio-option">
-                                <input type="radio" id="plan-no" name="plan" value="no-asistir" class="radio-input" required>
-                                <label for="plan-no" class="radio-label">
-                                    <div class="radio-icon"><i class="fas fa-heart"></i></div>
-                                    <div><strong>Esta vez no podré</strong><br>Los extrañaré</div>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label required">¿A qué hora planeas llegar?</label>
-                        <div class="time-selector">
-                            <div class="time-option">
-                                <input type="radio" id="hora-20" name="hora" value="20:00 - 21:00" class="time-input" required>
-                                <label for="hora-20" class="time-label">20:00 - 21:00</label>
-                            </div>
-                            <div class="time-option">
-                                <input type="radio" id="hora-21" name="hora" value="21:00 - 22:00" class="time-input" required>
-                                <label for="hora-21" class="time-label">21:00 - 22:00</label>
-                            </div>
-                            <div class="time-option">
-                                <input type="radio" id="hora-22" name="hora" value="22:00 - 23:00" class="time-input" required>
-                                <label for="hora-22" class="time-label">22:00 - 23:00</label>
-                            </div>
-                            <div class="time-option">
-                                <input type="radio" id="hora-brindis" name="hora" value="Para el brindis" class="time-input" required>
-                                <label for="hora-brindis" class="time-label">¡Para el brindis!</label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label required" for="total_personas">¿Vendrás con más personas?</label>
-                        <div class="personas-counter">
-                            <input type="number" id="total_personas" class="form-input personas-input" min="1" max="20" value="1" required>
-                            <div style="font-size: 1rem; color: var(--azul-marino); font-weight: 500;">
-                                persona(s) mayor(es) de 15 años
-                            </div>
-                        </div>
-                        <div class="personas-info-box">
-                            <div class="personas-note">
-                                <p><i class="fas fa-info-circle"></i> <strong>Incluyéndote a ti.</strong> Este número representa el total de personas mayores de 15 años que asistirán.</p>
-                                <p><i class="fas fa-child"></i> Los menores de 15 años no necesitan registro y no cuentan en este número.</p>
-                                <p><i class="fas fa-users"></i> Si vienes solo, deja el número en 1.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="comentarios">Para que tu experiencia sea perfecta:</label>
-                        <textarea id="comentarios" class="form-textarea" rows="4" placeholder="¿Alguna alergia alimentaria, preferencia o comentario que debamos saber? (Opcional)"></textarea>
-                    </div>
-                    
-                    <div class="form-note">
-                        <i class="fas fa-info-circle"></i> Los valores se comunicarán de forma personalizada al cierre de confirmaciones. ¡Gracias por ser parte de nuestra tradición!<br><br>
-                        <strong>Contactos de confirmación:</strong><br>
-                        - Damián Vergara Cortez: +56 9 3865 4827<br>
-                        - Fernanda Araís Cortez: +56 9 3037 3866
-                    </div>
-                    
-                    <button type="submit" class="btn-submit" id="submit-btn">
-                        <i class="fas fa-paper-plane"></i> Confirmar Asistencia
-                    </button>
-                </form>
-                
-                <!-- WhatsApp Alternative (se muestra dinámicamente) -->
-                <div id="whatsapp-alternative-container"></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Modal de Confirmación Mejorado -->
-    <div class="confirmation-modal" id="confirmation-modal">
-        <div class="confirmation-content">
-            <!-- Contenido dinámico se insertará aquí -->
-        </div>
+    <div id="confirmation-modal" class="confirmation-modal">
+        <div class="confirmation-content"></div>
     </div>
+    
+    <div id="whatsapp-alternative-container"></div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-logo">CORTEZ</div>
-            <p class="footer-text">Celebrando juntos desde siempre</p>
-            <p class="footer-text" style="margin-top: 20px; font-size: 0.9rem;">
-                © 2025 - Una tradición familiar<br>
-                <strong>Ubicación:</strong> Calle Los Aranda s/n, Putaendo<br>
-                <strong>Ver en Maps:</strong> <a href="https://maps.app.goo.gl/ZwG6P84EeUW11DS57" style="color: var(--oro-metalico);">https://maps.app.goo.gl/ZwG6P84EeUW11DS57</a><br>
-                <strong>Contactos:</strong> +56 9 3865 4827 / +56 9 3037 3866
-            </p>
-        </div>
-    </footer>
-
-    <!-- Enlazar archivo JavaScript externo -->
-    <script src="script.js"></script>
-</body>
+    <script src="script.js"></script> </body>
 </html>
